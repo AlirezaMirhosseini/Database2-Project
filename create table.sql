@@ -1,165 +1,201 @@
-create table Patient (
-	Patient_ID INT,
-	Patient_FName VARCHAR(50),
-	Patient_LName VARCHAR(50),
-	Phone VARCHAR(50),
-	Blood_Type VARCHAR(50),
-	Email VARCHAR(50),
-	Gender VARCHAR(50),
-	Condition VARCHAR(50),
-	Admission_Date DATE,
-	Discharge_Date DATE,
+CREATE TABLE Department (
+    Dept_id INT PRIMARY KEY,
+    Dept_head_EmpID INT,
+    Dept_Name VARCHAR(100),
+    Emp_count INT
+);
 
-	PRIMARY KEY (Patient_ID),
+CREATE TABLE Staff (
+    Emp_id INT PRIMARY KEY,
+    Dept_id INT FOREIGN KEY REFERENCES Department(Dept_id),
+    Emp_FName VARCHAR(100),
+    Emp_LName VARCHAR(100),
+    Gender VARCHAR(10),
+    PhoneNumber VARCHAR(15),
+    Join_Date DATE,
+    Sep_Date DATE,
+    Emp_type VARCHAR(50),
+    Field VARCHAR(100),
+    Address VARCHAR(255)
+);
+
+CREATE TABLE Doctor (
+    Doctor_id INT PRIMARY KEY,
+    Emp_id INT FOREIGN KEY REFERENCES Staff(Emp_id),
+    Research VARCHAR(255),
+    Specialization VARCHAR(255)
+);
+
+CREATE TABLE Nurse (
+    Nurse_id INT PRIMARY KEY,
+    Emp_id INT FOREIGN KEY REFERENCES Staff(Emp_id),
+    shift VARCHAR(50),
+    Supervisor_id INT FOREIGN KEY REFERENCES Staff(Emp_id)
+);
+
+CREATE TABLE Room (
+    Room_id INT PRIMARY KEY,
+    type VARCHAR(50),
+    cost DECIMAL(10, 2),
+    capacity INT
+);
+
+CREATE TABLE Insurance (
+    Insurance_id INT PRIMARY KEY,
+    Insurance_name VARCHAR(100),
+    Co_pay DECIMAL(10, 2)
+);
+
+CREATE TABLE Patient (
+    Patient_id INT PRIMARY KEY,
+    Patient_FName VARCHAR(100),
+    Patient_LName VARCHAR(100),
+    Gender VARCHAR(10),
+    PhoneNumber VARCHAR(15),
+    Blood_Type VARCHAR(10),
+    Insurance_id INT FOREIGN KEY REFERENCES Insurance(Insurance_id)
 );
 
 
 
-CREATE TABLE Department ( 
-  Dept_ID INT NOT NULL, 
-  Dept_Head VARCHAR(20) NOT NULL,
-  Dept_Name VARCHAR(15) NOT NULL, 
-  Emp_Count INT, PRIMARY KEY (Dept_ID) 
+CREATE TABLE Reception (
+    Rcp_id INT PRIMARY KEY,
+    Emp_id INT FOREIGN KEY REFERENCES Staff(Emp_id),
+    Patient_id INT FOREIGN KEY REFERENCES Patient(Patient_id),
+    Sickness VARCHAR(255),
+    Admission_Date DATE,
+    Discharge_Date DATE
+);
+
+CREATE TABLE Room_Reception (
+    Room_Rcp_id INT PRIMARY KEY,
+    Room_id INT FOREIGN KEY REFERENCES Room(Room_id),
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    start_date DATE,
+    end_date DATE
 );
 
 
-CREATE TABLE Staff ( 
-  Emp_ID INT NOT NULL, 
-  Emp_FName VARCHAR(20) NOT NULL, 
-  Emp_LName VARCHAR(20) NOT NULL,
-  Date_Joining DATE, 
-  Date_Seperation DATE, 
-  Emp_Type VARCHAR(15) NOT NULL, 
-  Email VARCHAR(50), 
-  Address VARCHAR(50) NOT NULL,
-  Dept_ID INT NOT NULL,
+CREATE TABLE Service_type (
+    Service_type_id INT PRIMARY KEY,
+    type VARCHAR(50)
+);
 
-  PRIMARY KEY (Emp_ID), 
-  FOREIGN KEY (Dept_ID) REFERENCES Department (Dept_ID) 
+CREATE TABLE Service (
+    Service_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Service_type_id INT FOREIGN KEY REFERENCES Service_type(Service_type_id),
+    SubService_type_id INT,
+    service_date DATE
+);
+
+CREATE TABLE Surgery_type (
+    Surgery_type_id INT PRIMARY KEY,
+    type VARCHAR(50)
+); 
+CREATE TABLE Result (
+    Result_id INT PRIMARY KEY,
+    Description VARCHAR(255)
+);
+CREATE TABLE Surgery (
+    Surgery_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Service_type_id INT FOREIGN KEY REFERENCES Service_type(Service_type_id),
+    Surgery_type_id INT FOREIGN KEY REFERENCES Surgery_type(Surgery_type_id),
+    Surgery_date DATE,
+    Duration TIME,
+    Result_id INT FOREIGN KEY REFERENCES Result(Result_id),
+    cost DECIMAL(10, 2),
+    Doctor_id INT FOREIGN KEY REFERENCES Doctor(Doctor_id)
 );
 
 
-CREATE TABLE Doctor ( 
-  Doctor_ID INT NOT NULL, 
-  Emp_ID INT NOT NULL,
-  Qualifications NVARCHAR(15) NOT NULL,
-  Specialization NVARCHAR(20) NOT NULL, 
-  
-  PRIMARY KEY (Doctor_ID), 
-  FOREIGN KEY (Emp_ID) REFERENCES Staff (Emp_ID), 
+CREATE TABLE Radiology_type (
+    Radiology_type_id INT PRIMARY KEY,
+    type VARCHAR(50)
+);
+
+CREATE TABLE Radiology (
+    Radiology_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Service_type_id INT FOREIGN KEY REFERENCES Service_type(Service_type_id),
+    Radiology_type_id INT FOREIGN KEY REFERENCES Radiology_type(Radiology_type_id),
+    Radiology_date DATE,
+    cost DECIMAL(10, 2)
+);
+
+CREATE TABLE Lab_type (
+    Lab_type_id INT PRIMARY KEY,
+    type VARCHAR(50)
+);
+
+CREATE TABLE Lab (
+    Lab_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Service_type_id INT FOREIGN KEY REFERENCES Service_type(Service_type_id),
+    LabType_id INT FOREIGN KEY REFERENCES Lab_type(Lab_type_id),
+    Lab_date DATE,
+    lab_type VARCHAR(50),
+    cost DECIMAL(10, 2)
 );
 
 
-
-CREATE TABLE Nurse ( 
-  Nurse_ID INT NOT NULL,
-
-  PRIMARY KEY(Nurse_ID), 
-  FOREIGN KEY (Emp_ID) REFERENCES Staff (Emp_ID), 
-);
-
-CREATE TABLE Payroll ( 
-  Account_No VARCHAR(25) NOT NULL, 
-  Salary DECIMAL(10,2) NOT NULL, 
-  Bonus DECIMAL(10,2), 
-  Emp_ID INT NOT NULL, 
-  IBAN VARCHAR(25), 
-  PRIMARY KEY (Account_No), 
-  FOREIGN KEY (Emp_ID) REFERENCES Staff (Emp_ID) 
-);
-
-
-CREATE TABLE Lab_Screening ( 
-  Lab_ID INT NOT NULL, 
-  Patient_ID INT NOT NULL,
-  Technician_ID INT NOT NULL, 
-  Doctor_ID INT NOT NULL,   
-  Test_Cost DECIMAL(10,2),
-  Date DATE NOT NULL,   
-  PRIMARY KEY (Lab_ID), 
-  FOREIGN KEY (Patient_ID) REFERENCES Patient (Patient_ID), 
-  FOREIGN KEY (Technician_ID) REFERENCES Nurse (Nurse_ID), 
-  FOREIGN KEY (Doctor_ID) REFERENCES Doctor (Doctor_ID)
-);
-
-
-CREATE TABLE Insurance ( 
-  Policy_Number int NOT NULL,
-  Ins_Code VARCHAR(20) NOT NULL, 
-  End_Date VARCHAR(10), 
-  plan__ VARCHAR(20), 
-  Co_Pay DECIMAL(10,2), 
-  Coverage VARCHAR(20), 
-  PRIMARY KEY (Policy_Number), 
-
-);
-
-
-CREATE TABLE Medicine( 
-  Medicine_ID INT NOT NULL, 
-  M_Name VARCHAR(20) NOT NULL,
-  M_Quantity INT NOT NULL, 
-  M_Cost Decimal(10,2), 
-  PRIMARY KEY (Medicine_ID) 
-);
-
-CREATE TABLE Prescription ( 
-  Prescription_ID INT NOT NULL, 
-  Patient_ID INT NOT NULL,
-  Medicine_ID INT NOT NULL, 
-  Date DATE, 
-  Dosage INT, 
-  Doctor_ID INT NOT NULL, 
-  PRIMARY KEY (Prescription_ID), 
-  FOREIGN KEY (Patient_ID) REFERENCES Patient (Patient_ID),
-  FOREIGN KEY (Doctor_ID) REFERENCES Doctor (Doctor_ID), 
-  FOREIGN KEY (Medicine_ID) REFERENCES Medicine (Medicine_ID)
-);
-
-
-CREATE TABLE Appointment ( 
-  Apt_ID INT NOT NULL, 
-  Scheduled_On DATETIME NOT NULL,
-  Date DATE,
-  Time TIME,
-  Doctor_ID INT NOT NULL, 
-  Patient_ID INT NOT NULL, 
-  PRIMARY KEY (Appt_ID), 
-  FOREIGN KEY (Doctor_ID) REFERENCES Doctor (Doctor_ID), 
-  FOREIGN KEY (Patient_ID) REFERENCES Patient (Patient_ID) 
+CREATE TABLE Visit (
+    Visit_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Service_type_id INT FOREIGN KEY REFERENCES Service_type(Service_type_id),
+    Visit_date DATE,
+    cost DECIMAL(10, 2)
 );
 
 
 
-CREATE TABLE Room ( 
-  Room_ID INT NOT NULL, 
-  Room_Type VARCHAR(50) NOT NULL, 
-  Patient_ID INT NOT NULL,
-  Room_Cost DECIMAL(10,2),       
-  PRIMARY KEY (Room_ID),               
-  
+CREATE TABLE Bill (
+    Bill_id INT PRIMARY KEY,
+    Rcp_id INT FOREIGN KEY REFERENCES Reception(Rcp_id),
+    Bill_date DATE,
+    Bill_cost DECIMAL(10, 2)
+);
+CREATE TABLE Prescription (
+    Prescription_id INT PRIMARY KEY,
+    Patient_id INT FOREIGN KEY REFERENCES Patient(Patient_id),
+    Doctor_id INT FOREIGN KEY REFERENCES Doctor(Doctor_id),
+    Prescription_date DATE
 );
 
 
+CREATE TABLE Payment (
+    Payment_id INT PRIMARY KEY,
+    Payment_date DATE,
+    type VARCHAR(50),
+    tracking_number VARCHAR(50),
+    discount DECIMAL(10, 2),
+    amount DECIMAL(10, 2)
+);
 
 
-CREATE TABLE Bill ( 
-  Bill_ID INT NOT NULL, 
-  Patient_ID INT NOT NULL, 
-  Date DATE NOT NULL, 
-  Room_ID Decimal(10,2), 
-  Lab_ID DECIMAL(10,2), 
-  Other_Charges DECIMAL(10,2), 
-  Medicine_ID DECIMAL(10,2), 
-  Total DECIMAL(10,2),  
-  Remaining_Balance DECIMAL(10,2), 
-  Policy_Number VARCHAR(20) NOT NULL,
-  PRIMARY KEY (Payment_ID), 
-  FOREIGN KEY (Room_ID) REFERENCES Room (Room_ID),
-  FOREIGN KEY (Lab_ID) REFERENCES Lab_Screening (Lab_ID), 
-  FOREIGN KEY (Medicine_ID) REFERENCES Medicine (Medicine_ID), 
-  FOREIGN KEY (Patient_ID) REFERENCES Patient (Patient_ID), 
-  FOREIGN KEY (Policy_Number) REFERENCES Insurance (Policy_Number) 
+CREATE TABLE Orderinfo (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    Prescription_id INT FOREIGN KEY REFERENCES Prescription(Prescription_id),
+    Payment_id INT FOREIGN KEY REFERENCES Payment(Payment_id)
+);
+
+CREATE TABLE Medicine (
+    Medicine_id INT PRIMARY KEY,
+    Medicine_Name VARCHAR(100),
+    type VARCHAR(50),
+    Production_date DATE,
+    Expiration_date DATE,
+    quantity INT,
+    cost DECIMAL(10, 2)
+);
+
+CREATE TABLE PrescriptionMedicine (
+    Prescription_id INT FOREIGN KEY REFERENCES Prescription(Prescription_id),
+    Medicine_id INT FOREIGN KEY REFERENCES Medicine(Medicine_id),
+    Medicine_quantity INT,
+    PRIMARY KEY (Prescription_id, Medicine_id)
 );
 
 
