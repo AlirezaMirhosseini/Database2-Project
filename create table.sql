@@ -74,8 +74,8 @@ CREATE TABLE Bill (
     Rcp_id INT,
     Bill_date DATE,
     Original_cost INT,
-    Discount DECIMAL INT,
-    Final_cost DECIMAL INT,
+    Discount INT,
+    Final_cost INT,
     FOREIGN KEY (Rcp_id) REFERENCES Reception(Rcp_id)
 );
 
@@ -228,7 +228,7 @@ CREATE TABLE Lab (
     Nurse_id INT,
     FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
-    FOREIGN KEY (Lab_Type_id) REFERENCES Lab_type(Lab_Type_id)
+    FOREIGN KEY (Lab_Type_id) REFERENCES Lab_type(Lab_Type_id),
     FOREIGN KEY (Nurse_id) REFERENCES Nurse(Nurse_id)
 );
 
@@ -243,4 +243,3 @@ CREATE TABLE Visit (
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
     FOREIGN KEY (Doctor_id) REFERENCES Doctor(Doctor_id)
 );
-
