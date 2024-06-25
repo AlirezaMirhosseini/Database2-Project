@@ -73,9 +73,9 @@ CREATE TABLE Bill (
     Bill_id INT PRIMARY KEY,
     Rcp_id INT,
     Bill_date DATE,
-    Original_cost DECIMAL(10, 2),
-    Discount DECIMAL(10, 2),
-    Final_cost DECIMAL(10, 2),
+    Original_cost INT,
+    Discount DECIMAL INT,
+    Final_cost DECIMAL INT,
     FOREIGN KEY (Rcp_id) REFERENCES Reception(Rcp_id)
 );
 
@@ -85,9 +85,9 @@ CREATE TABLE Payment (
     type VARCHAR(50),
     type_description VARCHAR(255),
     Payment_date DATE,
-    Original_amount DECIMAL(10, 2),
-    discount DECIMAL(10, 2),
-    Final_amount DECIMAL(10, 2),
+    Original_amount INT,
+    discount INT,
+    Final_amount INT,
     
 );
 
@@ -113,9 +113,11 @@ CREATE TABLE Orderinfo (
 CREATE TABLE Medicine (
     Medicine_id INT PRIMARY KEY,
     Medicine_Name VARCHAR(100),
+    isGeneric Bit ,
     type VARCHAR(50),
     Production_date DATE,
     Expiration_date DATE,
+    company_Name VARCHAR(200),
     quantity INT,
     cost DECIMAL(10, 2)
 );
@@ -150,7 +152,7 @@ CREATE TABLE Service (
 CREATE TABLE Room (
     Room_id INT PRIMARY KEY,
     type VARCHAR(50),
-    cost DECIMAL(10, 2),
+    cost INT,
     capacity INT
 );
 
@@ -165,7 +167,7 @@ CREATE TABLE Room_Reception (
 );
 CREATE TABLE Result (
     Result_id INT PRIMARY KEY,
-    Description TEXT
+    Description VARCHAR(100)
 );
 
 CREATE TABLE Surgery_type (
@@ -191,9 +193,9 @@ CREATE TABLE Surgery (
     Service_type_id INT,
     Surgery_Type_id INT,
     Surgery_date DATE,
-    Duration DECIMAL(5, 2),
+    Duration INT,
     Result_id INT,
-    cost DECIMAL(10, 2),
+    cost INT,
     Doctor_id INT,
 	FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
@@ -208,7 +210,7 @@ CREATE TABLE Radiology (
     Service_type_id INT,
     Radiology_Type_id INT,
     Radiology_date DATE,
-    cost DECIMAL(10, 2),
+    cost INT,
     Nurse_id INT,
     FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
@@ -222,10 +224,12 @@ CREATE TABLE Lab (
     Service_type_id INT,
     Lab_Type_id INT,
     Lab_date DATE,
-    cost DECIMAL(10, 2),
+    cost INT,
+    Nurse_id INT,
     FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
     FOREIGN KEY (Lab_Type_id) REFERENCES Lab_type(Lab_Type_id)
+    FOREIGN KEY (Nurse_id) REFERENCES Nurse(Nurse_id)
 );
 
 CREATE TABLE Visit (
@@ -239,5 +243,4 @@ CREATE TABLE Visit (
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
     FOREIGN KEY (Doctor_id) REFERENCES Doctor(Doctor_id)
 );
-
 
