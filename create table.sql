@@ -73,18 +73,22 @@ CREATE TABLE Bill (
     Bill_id INT PRIMARY KEY,
     Rcp_id INT,
     Bill_date DATE,
-    Bill_cost DECIMAL(10, 2),
+    Original_cost DECIMAL(10, 2),
+    Discount DECIMAL(10, 2),
+    Final_cost DECIMAL(10, 2),
     FOREIGN KEY (Rcp_id) REFERENCES Reception(Rcp_id)
 );
 
 CREATE TABLE Payment (
     Payment_id INT PRIMARY KEY,
-    Payment_date DATE,
-    type VARCHAR(50),
     tracking_number VARCHAR(100),
+    type VARCHAR(50),
+    type_description VARCHAR(255),
+    Payment_date DATE,
+    Original_amount DECIMAL(10, 2),
     discount DECIMAL(10, 2),
-    amount DECIMAL(10, 2),
-    type_description VARCHAR(255)
+    Final_amount DECIMAL(10, 2),
+    
 );
 
 CREATE TABLE Prescription (
@@ -99,9 +103,9 @@ CREATE TABLE Prescription (
 
 CREATE TABLE Orderinfo (
     order_id INT PRIMARY KEY,
-    order_date DATE,
     Prescription_id INT,
     Payment_id INT,
+    order_date DATE,
     FOREIGN KEY (Prescription_id) REFERENCES Prescription(Prescription_id),
     FOREIGN KEY (Payment_id) REFERENCES Payment(Payment_id)
 );
