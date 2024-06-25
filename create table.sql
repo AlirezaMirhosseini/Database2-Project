@@ -41,7 +41,7 @@ CREATE TABLE Nurse (
 CREATE TABLE Insurance (
     Insurance_id INT PRIMARY KEY,
     Insurance_name VARCHAR(100),
-    Co_pay DECIMAL(10, 2)
+    Co_pay INT
 );
 CREATE TABLE Patient (
     Patient_id INT PRIMARY KEY,
