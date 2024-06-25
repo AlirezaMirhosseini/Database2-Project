@@ -119,14 +119,14 @@ CREATE TABLE Medicine (
     Expiration_date DATE,
     company_Name VARCHAR(200),
     quantity INT,
-    cost DECIMAL(10, 2)
+    cost INT
 );
 
 CREATE TABLE PrescriptionMedicine (
     Prescription_id INT,
     Medicine_id INT,
     Medicine_quantity INT,
-    PRIMARY KEY (Prescription_id, Medicine_id),
+    --PRIMARY KEY (Prescription_id, Medicine_id),
     FOREIGN KEY (Prescription_id) REFERENCES Prescription(Prescription_id),
     FOREIGN KEY (Medicine_id) REFERENCES Medicine(Medicine_id)
 );
@@ -238,7 +238,7 @@ CREATE TABLE Visit (
     Service_type_id INT,
     Doctor_id INT,
     Visit_date DATE,
-    cost DECIMAL(10, 2),
+    cost INT,
     FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
     FOREIGN KEY (Doctor_id) REFERENCES Doctor(Doctor_id)
