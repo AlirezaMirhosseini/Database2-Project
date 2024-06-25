@@ -1,3 +1,12 @@
+--select * from Staff
+--select * from Department
+--select * from Doctor
+--select * from Nurse
+--select * from Insurance
+--select * from Medicine
+--select * from Room
+--select * from Patient
+
 CREATE TABLE Department (
     Dept_id INT PRIMARY KEY,
     Dept_head_EmpID INT,
@@ -14,8 +23,8 @@ CREATE TABLE Staff (
     Age INT,
     Gender VARCHAR(10),
     PhoneNumber VARCHAR(20),
-    Join_Date DATE,
-    Sep_Date DATE,
+    Date_Joining DATE,
+    Date_Seperation DATE,
     Emp_type VARCHAR(50),
     Field VARCHAR(100),
     Address VARCHAR(255),
@@ -55,7 +64,6 @@ CREATE TABLE Patient (
     Insurance_id INT,
     FOREIGN KEY (Insurance_id) REFERENCES Insurance(Insurance_id)
 );
-
 
 
 CREATE TABLE Reception (
@@ -112,14 +120,13 @@ CREATE TABLE Orderinfo (
 
 CREATE TABLE Medicine (
     Medicine_id INT PRIMARY KEY,
-    Medicine_Name VARCHAR(100),
-    isGeneric Bit ,
-    type VARCHAR(50),
+    Medicine_Name NVARCHAR(200),
+    M_type NVARCHAR(200),
+	quantity INT,
+    cost INT,
     Production_date DATE,
-    Expiration_date DATE,
-    company_Name VARCHAR(200),
-    quantity INT,
-    cost INT
+    Expiration_date DATE
+    
 );
 
 CREATE TABLE PrescriptionMedicine (
@@ -148,7 +155,6 @@ CREATE TABLE Service (
 );
 
 
-
 CREATE TABLE Room (
     Room_id INT PRIMARY KEY,
     type VARCHAR(50),
@@ -165,9 +171,10 @@ CREATE TABLE Room_Reception (
     FOREIGN KEY (Room_id) REFERENCES Room(Room_id),
     FOREIGN KEY (Rcp_id) REFERENCES Reception(Rcp_id)
 );
+
 CREATE TABLE Result (
     Result_id INT PRIMARY KEY,
-    Description VARCHAR(100)
+    Description NVARCHAR(1000)
 );
 
 CREATE TABLE Surgery_type (
@@ -236,9 +243,11 @@ CREATE TABLE Visit (
     Visit_id INT PRIMARY KEY,
     Service_id INT,
     Service_type_id INT,
+	SubService_type_id INT,
+	Visit_date DATE,
+	cost INT,
     Doctor_id INT,
-    Visit_date DATE,
-    cost INT,
+    
     FOREIGN KEY (Service_id) REFERENCES Service(Service_id),
     FOREIGN KEY (Service_type_id) REFERENCES Service_type(Service_type_id),
     FOREIGN KEY (Doctor_id) REFERENCES Doctor(Doctor_id)
